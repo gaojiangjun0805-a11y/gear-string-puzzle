@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>牵线成形 · 出题后台</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="masthead">
+      <div><p class="eyebrow">一站到底 · 齿轮机关</p><h1>牵线成形<span>出题后台</span></h1></div>
+      <div class="header-actions"><button id="new-band" class="button secondary">新增橡皮筋</button><button id="export" class="button primary">导出题目 JSON</button><label class="button secondary file-button">导入 JSON<input id="import" type="file" accept="application/json" /></label></div>
+    </header>
+
+    <main class="layout">
+      <aside class="panel author-panel">
+        <section>
+          <div class="section-title"><span>01</span><h2>驱动规则</h2></div>
+          <label>主动齿轮<select id="driver-gear"></select></label>
+          <div class="two-columns"><label>旋转方向<select id="driver-direction"><option value="1">顺时针</option><option value="-1">逆时针</option></select></label><label>转动角度<input id="driver-angle" type="number" min="-360" max="360" step="15" /></label></div>
+          <button id="auto-mesh" class="text-action">按位置检测啃合关系</button>
+        </section>
+        <section>
+          <div class="section-title"><span>02</span><h2>齿轮构造</h2></div>
+          <p class="selected-label" id="selected-gear-label">点击中间的齿轮进行编辑</p>
+          <div id="gear-fields" class="disabled-fields"></div>
+        </section>
+        <section>
+          <div class="section-title"><span>03</span><h2>出题规则</h2></div>
+          <p class="helper">在“终态目标”中点击要围入橡皮筋的钢钉。钢钉不与线绑定，程序会自动计算被张紧橡皮筋实际接触的外轮廓钉。</p>
+          <div id="band-list" class="band-list"></div>
+        </section>
+      </aside>
+
+      <section class="workspace">
+        <div class="stage-header"><div><p class="eyebrow">终态设计</p><h2>目标图形与钢钉布置</h2></div><div id="target-status" class="status-chip"></div></div>
+        <div class="board-card target-card"><svg id="target-board" viewBox="0 0 900 650" role="img" aria-label="终态齿轮与橡皮筋编辑区"></svg></div>
+        <div class="stage-header derived-header"><div><p class="eyebrow">自动反推 · 手动模拟</p><h2>选手初始态</h2></div><div class="simulation-controls"><button id="step-back" class="mini-button">↶ 逆时针一格</button><button id="step-forward" class="mini-button">顺时针一格 ↷</button><span id="simulation-angle" class="simulation-readout">0°</span><button id="reset-simulation" class="mini-button">回到初始态</button><button id="finish-simulation" class="mini-button">转到终态</button></div></div>
+        <p id="initial-note" class="initial-note wide-note">在主动齿轮上按住并拖动，可手动模拟联动旋转。</p>
+        <div class="board-card initial-card"><svg id="initial-board" viewBox="0 0 900 650" role="img" aria-label="反推后的初始齿轮与橡皮筋布置"></svg></div>
+      </section>
+
+      <aside class="panel report-panel">
+        <section id="difficulty-card">
+          <div class="section-title"><span>04</span><h2>难度测试</h2></div>
+          <div class="difficulty-score"><strong id="difficulty-rating">—</strong><span id="difficulty-raw"></span></div>
+          <dl id="difficulty-list" class="metric-list"></dl>
+        </section>
+        <section>
+          <div class="section-title"><span>05</span><h2>可发布性</h2></div>
+          <div id="uniqueness" class="uniqueness"></div>
+          <ul id="validation" class="validation"></ul>
+          <button id="publish" class="button primary full" disabled>生成题目包</button>
+        </section>
+        <section class="legend">
+          <p><i class="legend-hole"></i>外圈孔位</p><p><i class="legend-peg"></i>插入的钢钉</p><p><i class="legend-line"></i>闭合橡皮筋</p>
+        </section>
+      </aside>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
