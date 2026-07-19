@@ -34,7 +34,7 @@
       </aside>
 
       <section class="workspace">
-        <div class="stage-header"><div><p class="eyebrow">终态设计</p><h2>目标图形与钢钉布置</h2></div><div id="target-status" class="status-chip"></div></div>
+        <div class="stage-header"><div><p class="eyebrow">终态设计 · 出题旋转</p><h2>目标图形与钢钉布置</h2></div><div class="simulation-controls"><button id="author-step-back" class="mini-button">↶ 逆时针一格</button><button id="author-step-forward" class="mini-button">顺时针一格 ↷</button><label class="inline-angle">旋转角度<input id="author-angle" type="number" step="1" min="-720" max="720" /></label><button id="author-reset" class="mini-button">归零</button><div id="target-status" class="status-chip"></div></div></div>
         <div class="board-card target-card"><svg id="target-board" viewBox="0 0 900 650" role="img" aria-label="终态齿轮与橡皮筋编辑区"></svg></div>
         <div class="stage-header derived-header"><div><p class="eyebrow">选手操作区 · 从零开始</p><h2>空白作答盘</h2></div><div class="simulation-controls"><button id="step-back" class="mini-button">↶ 逆时针一格</button><button id="step-forward" class="mini-button">顺时针一格 ↷</button><span id="simulation-angle" class="simulation-readout">0°</span><button id="reset-simulation" class="mini-button">回到初始态</button><button id="finish-simulation" class="mini-button">转到终态</button></div></div>
         <p id="initial-note" class="initial-note wide-note">此盘面起始没有钢钉、没有橡皮筋、没有旋转；选手在这里完成布置并手动旋转齿轮。</p>
