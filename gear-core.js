@@ -30,6 +30,29 @@ export function tautBandContacts(points) {
   return [...lower.slice(0, -1), ...upper.slice(0, -1)];
 }
 
+export function resolveBandPath(path, pegs, contactRadius = 14) {
+  if (path.length < 2) return { path, contacts: [] };
+  const contactById = new Map();
+  const routed = [];
+  for (let index = 0; index < path.length; index += 1) {
+    const start = path[index]; const end = path[(index + 1) % path.length];
+    routed.push(start);
+    const dx = end.x - start.x; const dy = end.y - start.y; const lengthSquared = dx * dx + dy * dy || 1;
+    const hits = pegs.map(peg => {
+      const t = Math.max(0, Math.min(1, ((peg.x - start.x) * dx + (peg.y - start.y) * dy) / lengthSquared));
+      const x = start.x + t * dx; const y = start.y + t * dy;
+      return { peg, t, distance: Math.hypot(peg.x - x, peg.y - y) };
+    }).filter(hit => hit.distance <= contactRadius).sort((a, b) => a.t - b.t);
+    for (const hit of hits) {
+      if (contactById.has(hit.peg.id)) continue;
+      const contact = { ...hit.peg, t: hit.t };
+      contactById.set(hit.peg.id, contact);
+      routed.push(contact);
+    }
+  }
+  return { path: routed, contacts: [...contactById.values()] };
+}
+
 export function meshReport(gears, tolerance = 8) {
   const contacts = new Map(gears.map(gear => [gear.id, []]));
   for (let index = 0; index < gears.length; index += 1) {
@@ -102,15 +125,16 @@ export function validateQuestion(question) {
         break;
       }
     }
-    if (!Array.isArray(band.points) || band.points.length < 3) errors.push(`橡皮筋 ${index + 1} 至少需要三个孔位才能闭合。`);
+    const hasDrawnPath = Array.isArray(band.path) && band.path.length >= 3;
+    if (!hasDrawnPath && (!Array.isArray(band.points) || band.points.length < 3)) errors.push(`橡皮筋 ${index + 1} 至少需要三个孔位或一条闭合绘制轨迹。`);
   }
   return { valid: errors.length === 0, errors };
 }
 
 export function scoreDifficulty(question) {
   const angles = buildGearAngles(question.gears, question.driver.id, question.driver.angle);
-  const activeGears = new Set(question.bands.flatMap(band => band.points.map(point => point.gearId)));
-  const corners = question.bands.reduce((sum, band) => sum + band.points.length, 0);
+  const activeGears = new Set((question.pegs || question.bands.flatMap(band => band.points)).map(point => point.gearId));
+  const corners = question.bands.reduce((sum, band) => sum + (band.path?.length || band.points.length), 0);
   const ratios = [...angles.values()].filter(angle => Math.abs(angle) > 0.001).length;
   const precision = 360 / Math.max(...question.gears.map(gear => gear.holeCount));
   const raw = activeGears.size * 1.4 + corners * 0.85 + question.bands.length * 2.4 + ratios * 0.6 + Math.abs(question.driver.angle) / 90;
@@ -131,7 +155,7 @@ export function mechanicalUniqueness(question) {
   const start = deriveStartBands(question);
   const seen = new Set();
   for (const band of start) {
-    const signature = band.points.map(point => `${point.gearId}:${point.hole}`).join('|');
+    const signature = band.path?.length ? band.path.map(point => `${Math.round(point.x)}:${Math.round(point.y)}`).join('|') : band.points.map(point => `${point.gearId}:${point.hole}`).join('|');
     if (seen.has(signature)) return { unique: false, reason: '存在完全重复的橡皮筋路径。' };
     seen.add(signature);
   }
