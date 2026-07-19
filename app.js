@@ -6,12 +6,12 @@ const make = (name, attributes = {}) => { const node = document.createElementNS(
 const clamp = (value, min, max) => Math.min(max, Math.max(min, Number(value)));
 const MESH_TOLERANCE = 10;
 
-// 初始布局即为稳定的 3 × 3 啮合网：每个齿轮至少和一个邻居传动。
+// 初始布局为不规则树状传动网：每颗齿轮至少啮合一个邻居，且没有循环传动冲突。
 const starterGears = [
-  ['g1', 210, 180], ['g2', 325, 180], ['g3', 440, 180],
-  ['g4', 210, 295], ['g5', 325, 295], ['g6', 440, 295],
-  ['g7', 210, 410], ['g8', 325, 410], ['g9', 440, 410],
-].map(([id, x, y]) => ({ id, x, y, radius: gearRadius(24), teeth: 24, holeCount: 12, contacts: [] }));
+  ['g1', 430, 300, 24], ['g2', 324, 300, 20], ['g3', 430, 204, 16],
+  ['g4', 516, 300, 12], ['g5', 249, 375, 24], ['g6', 491, 143, 20],
+  ['g7', 560, 350, 16], ['g8', 179, 425, 12], ['g9', 633, 393, 20],
+].map(([id, x, y, teeth]) => ({ id, x, y, radius: gearRadius(teeth), teeth, holeCount: 12, contacts: [] }));
 
 let question = {
   gears: structuredClone(starterGears), driver: { id: 'g7', angle: 120 },
