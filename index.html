@@ -10,7 +10,7 @@
   <body>
     <header class="masthead">
       <div><p class="eyebrow">一站到底 · 齿轮机关</p><h1>牵线成形<span>出题后台</span></h1></div>
-      <div class="header-actions"><button id="new-band" class="button secondary">新增橡皮筋</button><button id="export" class="button primary">导出题目 JSON</button><label class="button secondary file-button">导入 JSON<input id="import" type="file" accept="application/json" /></label></div>
+      <div class="header-actions"><button id="peg-mode" class="button secondary">放置钢钉</button><button id="new-band" class="button secondary">画橡皮筋</button><button id="export" class="button primary">导出题目 JSON</button><label class="button secondary file-button">导入 JSON<input id="import" type="file" accept="application/json" /></label></div>
     </header>
 
     <main class="layout">
@@ -28,7 +28,7 @@
         </section>
         <section>
           <div class="section-title"><span>03</span><h2>出题规则</h2></div>
-          <p class="helper">在“终态目标”中点击要围入橡皮筋的钢钉。钢钉不与线绑定，程序会自动计算被张紧橡皮筋实际接触的外轮廓钉。</p>
+          <p class="helper">先点“放置钢钉”，再点击齿轮孔位插钉；随后点“画橡皮筋”，在目标盘面手绘一个闭合线环。程序只读取线环围住的钉子，不把线绑定到钉子。</p>
           <div id="band-list" class="band-list"></div>
         </section>
       </aside>
@@ -36,9 +36,12 @@
       <section class="workspace">
         <div class="stage-header"><div><p class="eyebrow">终态设计</p><h2>目标图形与钢钉布置</h2></div><div id="target-status" class="status-chip"></div></div>
         <div class="board-card target-card"><svg id="target-board" viewBox="0 0 900 650" role="img" aria-label="终态齿轮与橡皮筋编辑区"></svg></div>
-        <div class="stage-header derived-header"><div><p class="eyebrow">自动反推 · 手动模拟</p><h2>选手初始态</h2></div><div class="simulation-controls"><button id="step-back" class="mini-button">↶ 逆时针一格</button><button id="step-forward" class="mini-button">顺时针一格 ↷</button><span id="simulation-angle" class="simulation-readout">0°</span><button id="reset-simulation" class="mini-button">回到初始态</button><button id="finish-simulation" class="mini-button">转到终态</button></div></div>
-        <p id="initial-note" class="initial-note wide-note">在主动齿轮上按住并拖动，可手动模拟联动旋转。</p>
-        <div class="board-card initial-card"><svg id="initial-board" viewBox="0 0 900 650" role="img" aria-label="反推后的初始齿轮与橡皮筋布置"></svg></div>
+        <div class="stage-header derived-header"><div><p class="eyebrow">选手操作区 · 从零开始</p><h2>空白作答盘</h2></div><div class="simulation-controls"><button id="step-back" class="mini-button">↶ 逆时针一格</button><button id="step-forward" class="mini-button">顺时针一格 ↷</button><span id="simulation-angle" class="simulation-readout">0°</span><button id="reset-simulation" class="mini-button">回到初始态</button><button id="finish-simulation" class="mini-button">转到终态</button></div></div>
+        <p id="initial-note" class="initial-note wide-note">此盘面起始没有钢钉、没有橡皮筋、没有旋转；选手在这里完成布置并手动旋转齿轮。</p>
+        <div class="board-card initial-card"><svg id="player-board" viewBox="0 0 900 650" role="img" aria-label="选手空白作答盘"></svg></div>
+        <div class="stage-header derived-header"><div><p class="eyebrow">自动反推 · 仅供核验</p><h2>标准答案 · 正确起始布置</h2></div></div>
+        <p class="initial-note wide-note">以下是选手应当完成的钢钉与橡皮筋布置；它不是选手进入项目时看到的初始盘面。</p>
+        <div class="board-card initial-card"><svg id="answer-board" viewBox="0 0 900 650" role="img" aria-label="反推得到的标准答案盘面"></svg></div>
       </section>
 
       <aside class="panel report-panel">
